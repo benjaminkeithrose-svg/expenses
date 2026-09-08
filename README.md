@@ -92,27 +92,36 @@ Written against a real export. Each of these is something that file does:
 
 ## Branding
 
-Applied from the Intralox Global Brand Guidelines:
+Red and white lead; grays are support only. No blues or cyans anywhere.
 
-- **Dark gray (#4D4D4F / header #363738) dominant**, cyan (#479EBC) as the
-  secondary accent on section rules and the active tab. **Intralox red is
-  reserved for the logo** and is used nowhere in the UI (p.14).
-- Design-system UI tokens for state: success #237F35, error #B2232F,
-  emphasis #FFA400, input border #E3E3E3, text #222222 (p.17).
-- **Roboto** in the app, the primary digital typeface (p.20), vendored in
-  `fonts/` so it works offline. **Arial** in the exported document, the
-  standard for internal forms (p.19), so it renders identically anywhere
-  with no embedded fonts.
-- The logo is the **approved artwork**, never redrawn (p.12). White on the
-  dark masthead, red when the document is printed and the masthead inverts
-  to white paper (p.28).
+- **Intralox red (#EA1C24)** carries the identity: the logo, the rule under
+  the header, the active tab, primary buttons. **White** is the dominant
+  surface, with a very light wash (#F7F8F8) only to separate panels.
+- Grays are text and borders alone — #222222 text, #4D4D4F secondary,
+  #E3E3E3 rules.
+- Two functional colours, both from the approved digital palette: **green
+  #237F35** for a matched receipt, **orange #E36C00** for anything needing
+  attention. Errors don't use red, since red now reads as brand rather than
+  alarm.
+- **Roboto** in the app, vendored in `fonts/` so it works offline.
+  **Arial** in the exported document, the standard for internal forms
+  (Guidelines p.19), so it renders identically anywhere.
+- The logo is the **approved artwork**, never redrawn (p.12), converted to
+  transparent PNG so it sits cleanly on white. It's 26px tall in the header —
+  the earlier white knockout at 17px was unreadable on a phone.
+
+### Note on the guidelines
+
+The written guidelines (p.14) reserve red for the logo and make dark gray
+dominant. This build leads with red at your direction. Worth a word with
+Global Marketing if it's going anywhere outside your own claims.
 
 ### App icon — placeholder
 
-`icons/icon-192.png` and `icon-512.png` are a stand-in built from the
-approved white logo. Replace both with the CRM app icon artwork, dropping
-the "Call Log" wordmark and setting "Expenses" beneath it. Nothing else
-needs changing — bump `CACHE` in `sw.js` so phones pick the new icon up.
+`icons/icon-192.png` and `icon-512.png` are a stand-in: white logo on an
+Intralox red tile. Replace both with the CRM app icon artwork, dropping the
+"Call Log" wordmark and setting "Expenses" beneath it. Bump `CACHE` in
+`sw.js` afterwards so installed phones pick the new icon up.
 
 ## Files
 
@@ -125,7 +134,7 @@ needs changing — bump `CACHE` in `sw.js` so phones pick the new icon up.
     sw.js         offline cache — bump CACHE when you change a file
     lib/          SheetJS, vendored so the app works offline
     fonts/        Roboto (300/400/500/700), vendored
-    brand/        approved Intralox logo, white and red
+    brand/        approved Intralox logo, red (header, export) and white (icon)
     icons/        app icon — placeholder, see above
 
 ## Storage

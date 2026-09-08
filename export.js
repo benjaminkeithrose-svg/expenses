@@ -42,8 +42,7 @@ export async function buildExport(state) {
   const stmt = state.statement || {};
   // White logo on the dark masthead, red for print where it inverts to white
   // paper (Guidelines p.28 — use only the white logo on dark).
-  const logoWhite = await logoDataURL("brand/intralox-white.png");
-  const logoRed = await logoDataURL("brand/intralox-red.png");
+  const logo = await logoDataURL("brand/intralox-red.png");
 
   // Walk everything in the order it will appear, numbering as we go. The
   // number is what ties each index row to its receipt further down.
@@ -76,21 +75,20 @@ export async function buildExport(state) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Expenses ${esc(stmt.periodStart)} to ${esc(stmt.periodEnd)}</title>
 <style>
-/* Intralox Global Brand Guidelines: dark gray dominant, cyan secondary,
-   red reserved for the logo. Arial per the internal-forms standard (p.19),
-   so the file renders identically anywhere without embedded fonts. */
-:root{--ink:#222;--soft:#4D4D4F;--rule:#E3E3E3;--paper:#fff;--miss:#B2232F;--ok:#237F35;--cyan:#479EBC;--lightgray:#E8EAEB;--header:#363738}
+/* Intralox brand: red and white lead, grays support. Arial per the
+   internal-forms standard (Guidelines p.19), so the file renders identically
+   anywhere without embedded fonts. */
+:root{--ink:#222;--soft:#4D4D4F;--rule:#E3E3E3;--paper:#fff;--red:#EA1C24;--miss:#E36C00;--ok:#237F35;--lightgray:#E8EAEB}
 *{box-sizing:border-box}
-body{margin:0;background:var(--lightgray);color:var(--ink);font:15px/1.55 Arial,"Helvetica Neue",Helvetica,sans-serif;font-variant-numeric:tabular-nums}
+body{margin:0;background:#fff;color:var(--ink);font:15px/1.55 Arial,"Helvetica Neue",Helvetica,sans-serif;font-variant-numeric:tabular-nums}
 .sheet{max-width:760px;margin:0 auto;background:var(--paper);padding:0 0 60px}
-.masthead{background:var(--header);padding:20px 32px 18px;margin-bottom:30px}
-.masthead img{height:22px;width:auto;display:block;margin-bottom:12px}
-.masthead img.lg-print{display:none}
-.masthead h1{color:#fff;font-size:21px;font-weight:700;margin:0 0 3px}
-.masthead p{color:#B3B5B8;font-size:13.5px;margin:0}
+.masthead{background:#fff;padding:26px 32px 16px;margin-bottom:28px;border-bottom:3px solid var(--red)}
+.masthead img{height:30px;width:auto;display:block;margin-bottom:14px}
+.masthead h1{color:var(--ink);font-size:21px;font-weight:700;margin:0 0 3px}
+.masthead p{color:var(--soft);font-size:13.5px;margin:0}
 .pad{padding:0 32px}
 .sub{color:var(--soft);font-size:14px;margin:0 0 26px}
-h2{font-size:14px;font-weight:700;margin:34px 0 10px;text-transform:uppercase;letter-spacing:.05em;color:var(--soft);border-left:3px solid var(--cyan);padding-left:9px}
+h2{font-size:14px;font-weight:700;margin:34px 0 10px;text-transform:uppercase;letter-spacing:.05em;color:var(--soft);border-left:3px solid var(--red);padding-left:9px}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th{text-align:left;font-weight:500;color:var(--soft);font-size:12.5px;padding:0 8px 6px 0;border-bottom:1px solid var(--rule)}
 td{padding:7px 8px 7px 0;border-bottom:1px solid #eceef0;vertical-align:top}
@@ -101,7 +99,7 @@ td{padding:7px 8px 7px 0;border-bottom:1px solid #eceef0;vertical-align:top}
 .totals div{min-width:92px}
 .totals span{display:block;color:var(--soft);font-size:12.5px}
 .totals b{font-size:19px;font-weight:700}
-.flag{background:#F9ECED;border-left:3px solid var(--miss);padding:12px 16px;margin:18px 0;font-size:14px}
+.flag{background:#FDF2E7;border-left:3px solid var(--miss);padding:12px 16px;margin:18px 0;font-size:14px}
 .flag ul{margin:8px 0 0;padding-left:18px}
 .rcpt{padding:24px 0 20px;border-bottom:1px solid var(--rule)}
 .cap{display:flex;gap:10px;align-items:baseline;margin-bottom:12px}
@@ -112,12 +110,12 @@ td{padding:7px 8px 7px 0;border-bottom:1px solid #eceef0;vertical-align:top}
 .rcpt img{width:100%;max-width:520px;display:block;border:1px solid var(--rule)}
 .tag{font-size:11.5px;padding:1px 7px;border-radius:9px;background:var(--lightgray);color:var(--soft)}
 .tag.cash{background:#EDF3EE;color:var(--ok)}
-.tag.orphan{background:#F9ECED;color:var(--miss)}
+.tag.orphan{background:#FDF2E7;color:var(--miss)}
 footer{margin-top:32px;color:var(--soft);font-size:12.5px}
-@media print{body{background:#fff}.sheet{max-width:none;padding:0}.rcpt{page-break-inside:avoid}.masthead{background:#fff;padding:0 0 14px;border-bottom:2px solid var(--header)}.masthead h1{color:var(--ink)}.masthead p{color:var(--soft)}.pad{padding:0}.masthead img.lg-screen{display:none}.masthead img.lg-print{display:block}}
+@media print{body{background:#fff}.sheet{max-width:none;padding:0}.rcpt{page-break-inside:avoid}.masthead{padding:0 0 14px}.pad{padding:0}}
 </style></head><body><div class="sheet">`);
 
-  a(`<div class="masthead">${logoWhite ? `<img class="lg-screen" src="${logoWhite}" alt="Intralox">` : ""}${logoRed ? `<img class="lg-print" src="${logoRed}" alt="Intralox">` : ""}
+  a(`<div class="masthead">${logo ? `<img src="${logo}" alt="Intralox">` : ""}
 <h1>Expenses \u2014 ${shortDate(stmt.periodStart)} to ${shortDate(stmt.periodEnd)} ${esc((stmt.periodEnd || "").slice(0, 4))}</h1>
 <p>${esc(stmt.card || "")} \u00b7 prepared ${shortDate(new Date().toISOString().slice(0, 10))} ${new Date().getFullYear()}</p></div><div class="pad">`);
 
