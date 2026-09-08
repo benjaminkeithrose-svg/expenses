@@ -1,4 +1,4 @@
-# Receipts
+# Intralox Expenses
 
 Match receipt photos to Amex charges on your phone, add cash expenses, and
 export one self-contained HTML claim.
@@ -90,6 +90,30 @@ Written against a real export. Each of these is something that file does:
 - CSV exports have no metadata block, so the period falls back to the first
   and last transaction dates.
 
+## Branding
+
+Applied from the Intralox Global Brand Guidelines:
+
+- **Dark gray (#4D4D4F / header #363738) dominant**, cyan (#479EBC) as the
+  secondary accent on section rules and the active tab. **Intralox red is
+  reserved for the logo** and is used nowhere in the UI (p.14).
+- Design-system UI tokens for state: success #237F35, error #B2232F,
+  emphasis #FFA400, input border #E3E3E3, text #222222 (p.17).
+- **Roboto** in the app, the primary digital typeface (p.20), vendored in
+  `fonts/` so it works offline. **Arial** in the exported document, the
+  standard for internal forms (p.19), so it renders identically anywhere
+  with no embedded fonts.
+- The logo is the **approved artwork**, never redrawn (p.12). White on the
+  dark masthead, red when the document is printed and the masthead inverts
+  to white paper (p.28).
+
+### App icon — placeholder
+
+`icons/icon-192.png` and `icon-512.png` are a stand-in built from the
+approved white logo. Replace both with the CRM app icon artwork, dropping
+the "Call Log" wordmark and setting "Expenses" beneath it. Nothing else
+needs changing — bump `CACHE` in `sw.js` so phones pick the new icon up.
+
 ## Files
 
     index.html    the app shell
@@ -100,6 +124,9 @@ Written against a real export. Each of these is something that file does:
     export.js     builds the output HTML
     sw.js         offline cache — bump CACHE when you change a file
     lib/          SheetJS, vendored so the app works offline
+    fonts/        Roboto (300/400/500/700), vendored
+    brand/        approved Intralox logo, white and red
+    icons/        app icon — placeholder, see above
 
 ## Storage
 

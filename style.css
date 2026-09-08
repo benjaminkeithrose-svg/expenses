@@ -1,15 +1,39 @@
+/* Intralox Global Brand Guidelines.
+   Dark gray dominant, cyan as the secondary accent. Intralox red is reserved
+   for the logo alone and is never used as a UI colour (Guidelines p.14). */
+
+@font-face { font-family: Roboto; font-weight: 300; font-display: swap;
+  src: url("fonts/roboto-latin-300-normal.woff2") format("woff2"); }
+@font-face { font-family: Roboto; font-weight: 400; font-display: swap;
+  src: url("fonts/roboto-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: Roboto; font-weight: 500; font-display: swap;
+  src: url("fonts/roboto-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: Roboto; font-weight: 700; font-display: swap;
+  src: url("fonts/roboto-latin-700-normal.woff2") format("woff2"); }
+
 :root {
-  --ink: #1b1f24;
-  --soft: #6d757e;
-  --faint: #9aa2ab;
-  --rule: #dee3e8;
-  --bg: #eff1f4;
-  --surface: #fff;
-  --ok: #2f6b3f;
-  --ok-bg: #edf4ee;
-  --warn: #a83f1e;
-  --warn-bg: #fcf0eb;
-  --focus: #2b6cb0;
+  /* brand */
+  --ox-dark-gray: #4D4D4F;      /* primary, dominant */
+  --ox-header: #363738;         /* $ox-footer-color, global header/footer */
+  --ox-medium-gray: #B3B5B8;
+  --ox-light-gray: #E8EAEB;
+  --ox-cyan: #479EBC;           /* secondary accent */
+  --ox-dark-cyan: #00708D;
+  --ox-orange: #FFA400;
+
+  /* design-system UI tokens */
+  --ink: #222222;               /* $ox-text-color */
+  --soft: #4D4D4F;
+  --faint: #9E9E9E;             /* $ox-input-placeholder-color */
+  --rule: #E3E3E3;              /* $ox-input-border-color */
+  --bg: #F7F8F8;                /* $ox-input-background */
+  --surface: #FFFFFF;
+  --ok: #237F35;                /* $success-color */
+  --ok-bg: #EDF3EE;
+  --warn: #B2232F;              /* $error-color */
+  --warn-bg: #F9ECED;
+  --focus: #0084BB;             /* $ox-input-label-color-focused */
+  --link: #0377BA;              /* $ox-link-blue */
   --pad: 14px;
 }
 
@@ -21,7 +45,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font: 16px/1.5 Roboto, "Helvetica Neue", Arial, sans-serif;
   font-variant-numeric: tabular-nums;
   padding-bottom: calc(78px + env(safe-area-inset-bottom));
 }
@@ -36,25 +60,32 @@ h2 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
 
 header {
   position: sticky; top: 0; z-index: 20;
-  background: var(--surface);
-  border-bottom: 1px solid var(--rule);
-  padding: calc(10px + env(safe-area-inset-top)) var(--pad) 10px;
+  background: var(--ox-header);
+  color: #fff;
+  padding: calc(8px + env(safe-area-inset-top)) var(--pad) 10px;
+}
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.brand img { height: 17px; width: auto; display: block; }
+.brand span {
+  font-size: 12px; font-weight: 300; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ox-medium-gray);
+  padding-left: 10px; border-left: 1px solid #5c5d5f;
 }
 .top { display: flex; align-items: flex-start; gap: 12px; }
-.top p { margin: 2px 0 0; font-size: 13px; }
+.top p { margin: 2px 0 0; font-size: 13px; color: var(--ox-medium-gray); }
 .top > div { min-width: 0; flex: 1; }
 .top p, .top h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .icon {
   border: none; background: none; font-size: 22px; line-height: 1;
-  color: var(--soft); padding: 2px 8px; cursor: pointer;
+  color: inherit; padding: 2px 8px; cursor: pointer;
 }
 
 .tallies { display: flex; gap: 20px; margin-top: 10px; }
-.tally span { display: block; font-size: 11px; color: var(--soft); }
+.tally span { display: block; font-size: 11px; color: var(--ox-medium-gray); }
 .tally b { font-size: 16px; font-weight: 600; }
-.tally.done b { color: var(--ok); }
-.tally.todo b { color: var(--warn); }
+.tally.done b { color: #7FD394; }
+.tally.todo b { color: var(--ox-orange); }
 
 .banner { padding: 10px var(--pad); font-size: 13.5px; background: var(--warn-bg); color: var(--warn); }
 .banner.good { background: var(--ok-bg); color: var(--ok); }
@@ -71,7 +102,8 @@ header {
   padding: 8px 6px; border-radius: 6px; cursor: pointer;
   background: transparent; border: 1px solid transparent; color: var(--soft);
 }
-.tab.on { background: var(--surface); border-color: var(--rule); color: var(--ink); }
+.tab.on { background: var(--surface); border-color: var(--rule); color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--ox-cyan); }
 .tab .dot { color: var(--warn); font-weight: 600; }
 
 main { padding: 14px var(--pad) 20px; }
@@ -132,7 +164,7 @@ main { padding: 14px var(--pad) 20px; }
 .thumb.placed img { opacity: .45; }
 .thumb .lbl {
   position: absolute; left: 0; right: 0; bottom: 0;
-  background: rgba(27,31,36,.76); color: #fff; font-size: 11px;
+  background: rgba(54,55,56,.82); color: #fff; font-size: 11px;
   padding: 3px 5px; border-radius: 0 0 5px 5px; text-align: center;
 }
 .thumb .lbl.nodate { background: var(--warn); }
@@ -147,7 +179,7 @@ main { padding: 14px var(--pad) 20px; }
 .btn {
   font: inherit; font-size: 15px; font-weight: 500;
   padding: 11px 16px; border-radius: 6px; cursor: pointer;
-  background: var(--ink); color: #fff; border: 1px solid var(--ink);
+  background: var(--ox-dark-gray); color: #fff; border: 1px solid var(--ox-dark-gray);
 }
 .btn:disabled { opacity: .4; }
 .btn.ghost { background: var(--surface); color: var(--ink); border-color: var(--rule); }
@@ -167,7 +199,7 @@ main { padding: 14px var(--pad) 20px; }
 
 .sheet {
   position: fixed; inset: 0; z-index: 40;
-  background: rgba(18,22,27,.5);
+  background: rgba(34,34,34,.5);
   display: flex; align-items: flex-end; justify-content: center;
 }
 .sheet .card {
@@ -212,7 +244,7 @@ main { padding: 14px var(--pad) 20px; }
 }
 
 .lightbox {
-  position: fixed; inset: 0; z-index: 60; background: rgba(18,22,27,.9);
+  position: fixed; inset: 0; z-index: 60; background: rgba(34,34,34,.92);
   display: flex; align-items: center; justify-content: center; padding: 16px;
 }
 .lightbox img { max-width: 100%; max-height: 100%; }
@@ -220,7 +252,7 @@ main { padding: 14px var(--pad) 20px; }
 .toast {
   position: fixed; bottom: calc(84px + env(safe-area-inset-bottom));
   left: 50%; transform: translateX(-50%); z-index: 70;
-  background: var(--ink); color: #fff; padding: 10px 18px;
+  background: var(--ox-header); color: #fff; padding: 10px 18px;
   border-radius: 6px; font-size: 14px; max-width: 90vw; text-align: center;
 }
 .toast.bad { background: var(--warn); }
