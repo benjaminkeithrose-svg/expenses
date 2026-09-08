@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b1f24">
+<title>Receipts</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+<script src="lib/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <div>
+      <h1 id="period">No statement</h1>
+      <p id="card" class="soft"></p>
+    </div>
+    <button class="icon" id="menuBtn" aria-label="Menu">⋯</button>
+  </div>
+  <div class="tallies" id="tallies"></div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<nav class="tabs" role="tablist">
+  <button class="tab on" data-tab="charges" role="tab">Charges</button>
+  <button class="tab" data-tab="receipts" role="tab">Receipts</button>
+  <button class="tab" data-tab="cash" role="tab">Cash</button>
+</nav>
+
+<main>
+  <section id="view-charges" class="view">
+    <div id="lines" class="rows"></div>
+    <div id="chargesEmpty" class="empty">
+      <p>No statement loaded.</p>
+      <button class="btn" id="loadStmt2">Load Amex file</button>
+      <p class="soft small">Pick the .xlsx or .csv from OneDrive in your file picker.</p>
+    </div>
+  </section>
+
+  <section id="view-receipts" class="view" hidden>
+    <div class="pickrow">
+      <label class="btn ghost wide">Take photo
+        <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
+      </label>
+      <label class="btn ghost wide">Choose photos
+        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      </label>
+    </div>
+    <p class="soft small hint" id="rcptHint"></p>
+    <div id="thumbs" class="thumbs"></div>
+    <div id="receiptsEmpty" class="empty small">No receipts yet.</div>
+  </section>
+
+  <section id="view-cash" class="view" hidden>
+    <p class="soft small hint">For anything you couldn't put on the card.</p>
+    <div id="cash" class="rows cashrows"></div>
+    <div id="cashEmpty" class="empty small">No cash expenses yet.</div>
+    <button class="btn ghost wide" id="addCash">Add cash expense</button>
+  </section>
+</main>
+
+<div class="footbar">
+  <button class="btn wide" id="exportBtn" disabled>Export HTML</button>
+</div>
+
+<!-- date prompt shown for each new photo -->
+<div id="dateSheet" class="sheet" hidden>
+  <div class="card">
+    <img id="dateImg" alt="">
+    <div class="body">
+      <h2 id="dateTitle">Receipt date</h2>
+      <p class="soft small" id="dateWhy"></p>
+      <input type="date" id="dateInput">
+      <div class="btns">
+        <button class="btn ghost" id="dateSkip">Skip</button>
+        <button class="btn" id="dateOk">Save date</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- assignment sheet: charges near the receipt's date -->
+<div id="assignSheet" class="sheet" hidden>
+  <div class="card tall">
+    <div class="head">
+      <div>
+        <h2 id="assignTitle">Where does this go?</h2>
+        <p class="soft small" id="assignSub"></p>
+      </div>
+      <button class="icon" id="assignClose" aria-label="Close">×</button>
+    </div>
+    <div id="assignList" class="assignlist"></div>
+    <div class="btns spread">
+      <button class="btn ghost" id="assignCash">Make it a cash expense</button>
+      <button class="btn ghost" id="assignWiden">Show all charges</button>
+    </div>
+  </div>
+</div>
+
+<div id="menuSheet" class="sheet" hidden>
+  <div class="card">
+    <div class="body">
+      <h2>Options</h2>
+      <button class="btn ghost wide" id="loadStmt">Load Amex file</button>
+      <button class="btn ghost wide" id="storageBtn">Storage used</button>
+      <button class="btn ghost wide danger" id="resetBtn">Start a new month</button>
+      <p class="soft small" id="storageInfo"></p>
+      <button class="btn ghost wide" id="menuClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox" class="lightbox" hidden><img id="lightboxImg" alt=""></div>
+<div id="toast" class="toast" hidden></div>
+<input type="file" id="stmtInput" accept=".xlsx,.xls,.csv" hidden>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
