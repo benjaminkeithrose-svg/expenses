@@ -443,6 +443,88 @@ $("loadStmt2").onclick = openStmt;
 
 $("menuBtn").onclick = () => ($("menuSheet").hidden = false);
 $("menuClose").onclick = () => ($("menuSheet").hidden = true);
+
+// ---------------------------------------------------------------- install
+
+// Chrome fires this only when every installability criterion passes. Holding
+// on to it lets us offer a real Install button rather than leaving the person
+// to hunt through the browser menu, where the entry is only ever a shortcut.
+let installPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  installPrompt = e;
+  $("installBtn").hidden = false;
+});
+
+window.addEventListener("appinstalled", () => {
+  installPrompt = null;
+  $("installBtn").hidden = true;
+  toast("Installed");
+});
+
+$("installBtn").onclick = async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  const { outcome } = await installPrompt.userChoice;
+  if (outcome === "accepted") $("installBtn").hidden = true;
+  installPrompt = null;
+};
+
+const standalone = () =>
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+/** Report exactly which installability requirement is failing. */
+$("diagBtn").onclick = async () => {
+  const out = $("diagOut");
+  out.hidden = false;
+  out.textContent = "Checking\u2026";
+  const lines = [];
+  const tick = (ok, label) => lines.push(`${ok ? "\u2713" : "\u2717"} ${label}`);
+
+  tick(location.protocol === "https:" || location.hostname === "localhost",
+       `Secure origin (${location.protocol}//${location.hostname})`);
+
+  let manifest = null;
+  try {
+    const href = document.querySelector("link[rel=manifest]").getAttribute("href");
+    const url = new URL(href, location.href).href;
+    const res = await fetch(url);
+    manifest = await res.json();
+    tick(res.ok, "Manifest loads");
+    const scope = new URL(manifest.scope || "./", url).href;
+    const start = new URL(manifest.start_url || "./", url).href;
+    tick(start.startsWith(scope), "start_url inside scope");
+    tick(location.href.startsWith(scope), "This page inside scope");
+    tick(["standalone", "fullscreen", "minimal-ui"].includes(manifest.display),
+         `display: ${manifest.display}`);
+    const sizes = (manifest.icons || []).map((i) => i.sizes);
+    tick(sizes.includes("192x192") && sizes.includes("512x512"),
+         `Icons declared: ${sizes.join(", ") || "none"}`);
+    for (const i of manifest.icons || []) {
+      const r = await fetch(new URL(i.src, url).href).catch(() => null);
+      if (!r || !r.ok) tick(false, `Icon missing: ${i.src}`);
+    }
+  } catch (e) {
+    tick(false, "Manifest: " + e.message);
+  }
+
+  const regs = await navigator.serviceWorker.getRegistrations();
+  tick(regs.length > 0, `Service worker registered (${regs.length})`);
+  tick(!!navigator.serviceWorker.controller, "Service worker controlling page");
+
+  tick(!!installPrompt || standalone(),
+       standalone() ? "Already installed"
+                    : installPrompt ? "Chrome offered the install prompt"
+                                    : "Chrome has NOT offered install yet");
+
+  if (!installPrompt && !standalone())
+    lines.push("", "If everything above is ticked, reload once more \u2014",
+               "Chrome sometimes needs a second visit before offering.");
+
+  out.textContent = lines.join("\n");
+};
 $("storageBtn").onclick = async () => {
   const u = await db.usage();
   $("storageInfo").textContent = u

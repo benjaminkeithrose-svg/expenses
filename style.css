@@ -281,3 +281,11 @@ main { padding: 14px var(--pad) 20px; }
   color: #fff; font-weight: 500;
 }
 .build { font-size: 11.5px; color: var(--faint); text-align: center; margin: 12px 0 0; }
+
+/* Install readiness report */
+.diag {
+  font: 12.5px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  white-space: pre-wrap; margin: 10px 0 0; padding: 11px 12px;
+  background: var(--sunken); border: 1px solid var(--rule); border-radius: 5px;
+  color: var(--ink);
+}

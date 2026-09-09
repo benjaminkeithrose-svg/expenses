@@ -10,10 +10,25 @@ amounts stay on the device — the app has no server and no account.
 
 1. Push this folder to a GitHub repo, then turn on **Settings → Pages**,
    source `main` / root. GitHub serves the files; it never sees your data.
-2. Open the Pages URL in Chrome on the Samsung.
-3. **⋮ → Add to Home screen.**
+   The repo must be **public** unless you're on a paid plan — Pages is
+   disabled for private repos on the free tier.
+2. Wait for the Pages deploy to finish, then open the **https:// Pages URL**
+   in Chrome on the Samsung. It has to be that URL, not a `file://` open and
+   not a `raw.githubusercontent.com` link, or none of the install machinery
+   works.
+3. Open **⋯ → Options** in the app and tap **Install app**.
 
-From then on it opens like any other app and works with no signal.
+That button appears only once Chrome has confirmed the app is installable,
+so if it's there, the install will be a real one: its own icon, no browser
+bar, launches like any other app.
+
+If the button isn't there, tap **Check install readiness** in the same menu.
+It reports each requirement in turn — secure origin, manifest, scope, icons,
+service worker — so you can see exactly which one is failing rather than
+guessing. Chrome occasionally wants a second visit before it offers, so
+reload once if everything is ticked.
+
+From then on it works with no signal.
 
 To try it on a desktop first: `python3 -m http.server 8000` in this folder,
 then open <http://localhost:8000>. A plain `file://` open won't work — modules
@@ -117,6 +132,23 @@ Red and white lead; grays are support only. No blues or cyans anywhere.
 The written guidelines (p.14) reserve red for the logo and make dark gray
 dominant. This build leads with red at your direction. Worth a word with
 Global Marketing if it's going anywhere outside your own claims.
+
+### Why it wasn't installing
+
+Two faults, both fixed:
+
+- The manifest carried an `id` of `/intralox-expenses/`. Chrome resolves
+  `id` against the **origin**, not the manifest's folder, so on GitHub Pages
+  it landed outside the app's scope and broke the app's identity. It's now
+  omitted, which makes Chrome default it to `start_url`.
+- Nothing in the app ever asked to be installed. Chrome fires
+  `beforeinstallprompt` only when every criterion passes; the app now catches
+  that event and shows a real **Install app** button. Adding a page from the
+  browser menu without it only ever creates a shortcut — a badged icon that
+  opens in a browser tab, which is what you were seeing.
+
+`start_url` is now `./` rather than `./index.html`, so it matches scope
+exactly.
 
 ### Updating an installed app
 
