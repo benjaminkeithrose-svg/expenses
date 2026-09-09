@@ -26,8 +26,10 @@ and service workers need a real origin.
 2. Open the app, **⋯ → Load Amex file**, and pick it. Android's file picker
    lists OneDrive as a source, so no Microsoft sign-in is needed here.
 3. **Receipts → Take photo** or **Choose photos**.
-4. Confirm the date for each one. It's usually already filled in from the
-   photo's own EXIF data, so this is normally just a tap.
+4. Confirm the date for each one. It arrives already filled in from the
+   photo's own EXIF data, so this is normally just a tap. If you snapped
+   the receipt a day or two after buying, tap **1 day earlier** /
+   **2 days earlier**, or pick any date from the field below the chips.
 5. Tap a receipt. The charges from that same day come up first, then a day
    either side. Tap the right one.
 6. Anything with no matching charge → **Make it a cash expense**, then type
@@ -116,6 +118,18 @@ The written guidelines (p.14) reserve red for the logo and make dark gray
 dominant. This build leads with red at your direction. Worth a word with
 Global Marketing if it's going anywhere outside your own claims.
 
+### Updating an installed app
+
+The service worker is **network-first for code and markup**, so a phone with
+the app installed picks up new builds on the next launch with a signal.
+Fonts and images stay cache-first because they don't change. Bump `VERSION`
+in `sw.js` whenever you change a file. **⋯ → Options** shows the build number
+so you can tell what a phone is actually running.
+
+The header logo is embedded directly in `index.html` as a data URI rather
+than loaded from `brand/`, so it can't 404 or go stale independently of the
+page.
+
 ### App icon — placeholder
 
 `icons/icon-192.png` and `icon-512.png` are a stand-in: white logo on an
@@ -136,6 +150,7 @@ Intralox red tile. Replace both with the CRM app icon artwork, dropping the
     fonts/        Roboto (300/400/500/700), vendored
     brand/        approved Intralox logo, red (header, export) and white (icon)
     icons/        app icon — placeholder, see above
+                  (192, 512, maskable 512 with launcher safe zone, apple 180)
 
 ## Storage
 

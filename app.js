@@ -271,6 +271,26 @@ async function addPhotos(fileList) {
   nextDate();
 }
 
+/** Shift an ISO date by n days. */
+function shiftDate(iso, n) {
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
+function drawChips(photoDate, chosen) {
+  const box = $("dateChips");
+  if (!photoDate) return (box.innerHTML = "");
+  // Receipts get photographed later far more often than earlier, so the
+  // steps go backwards from the day the picture was taken.
+  box.innerHTML = [0, -1, -2, -3].map((n) => {
+    const d = shiftDate(photoDate, n);
+    const label = n === 0 ? "Photo day" : `${-n} day${n === -1 ? "" : "s"} earlier`;
+    return `<button class="chip ${d === chosen ? "on" : ""}" data-day="${d}">
+      ${label}<br><span style="font-size:11.5px">${shortDate(d)}</span></button>`;
+  }).join("");
+}
+
 /** Confirm the date for each new photo, one at a time. */
 async function nextDate() {
   if (!queue.length) { $("dateSheet").hidden = true; return; }
@@ -278,14 +298,26 @@ async function nextDate() {
   const meta = S.receipts[rid];
   const rec = await db.getImage(rid);
   $("dateImg").src = rec ? URL.createObjectURL(rec.display) : "";
-  $("dateInput").value = meta.date || S.statement?.periodEnd || "";
+  const value = meta.date || S.statement?.periodEnd || "";
+  $("dateInput").value = value;
   $("dateTitle").textContent = queue.length > 1
     ? `Receipt date (${queue.length} left)` : "Receipt date";
   $("dateWhy").textContent = meta.date
-    ? "Taken from the photo. Change it if the receipt is from another day."
-    : "This photo has no date in it, so please set one.";
+    ? `Photo taken ${shortDate(meta.date)}. If the receipt is from an earlier day, pick it below.`
+    : "This photo carries no date, so please set one.";
+  drawChips(meta.date, value);
   $("dateSheet").hidden = false;
 }
+
+$("dateChips").addEventListener("click", (e) => {
+  const chip = e.target.closest("[data-day]");
+  if (!chip) return;
+  $("dateInput").value = chip.dataset.day;
+  drawChips(S.receipts[queue[0]]?.date, chip.dataset.day);
+});
+
+$("dateInput").addEventListener("change", () =>
+  drawChips(S.receipts[queue[0]]?.date, $("dateInput").value));
 
 async function commitDate(value) {
   const rid = queue.shift();

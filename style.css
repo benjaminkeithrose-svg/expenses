@@ -254,7 +254,7 @@ main { padding: 14px var(--pad) 20px; }
 
 .toast {
   position: fixed; bottom: calc(84px + env(safe-area-inset-bottom));
-  left: 50%; transform: translateX(-50%); z-index: 70;
+  left: 50%; transform: translateX(-50%); z-index: 35;
   background: var(--ink); color: #fff; padding: 10px 18px;
   border-radius: 6px; font-size: 14px; max-width: 90vw; text-align: center;
 }
@@ -267,3 +267,17 @@ main { padding: 14px var(--pad) 20px; }
   .sheet .card { border-radius: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Quick day-steps on the date prompt, for when a receipt was photographed
+   a day or two after the purchase. */
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0 2px; }
+.chip {
+  font: inherit; font-size: 13.5px; padding: 7px 12px; cursor: pointer;
+  border: 1px solid var(--rule); border-radius: 15px;
+  background: var(--surface); color: var(--soft);
+}
+.chip.on {
+  background: var(--ox-red); border-color: var(--ox-red);
+  color: #fff; font-weight: 500;
+}
+.build { font-size: 11.5px; color: var(--faint); text-align: center; margin: 12px 0 0; }
