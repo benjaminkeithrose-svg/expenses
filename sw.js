@@ -9,7 +9,7 @@
 //
 // Bump VERSION whenever you change a file.
 
-const VERSION = "v5";
+const VERSION = "v6";
 const CODE = `receipts-code-${VERSION}`;
 const ASSETS = `receipts-assets-${VERSION}`;
 
@@ -19,12 +19,12 @@ const CODE_FILES = [
 ];
 
 const ASSET_FILES = [
-  "./lib/xlsx.full.min.js",
-  "./brand/intralox-red.png", "./brand/intralox-white.png",
-  "./icons/icon-192.png", "./icons/icon-512.png",
-  "./icons/icon-maskable-512.png", "./icons/apple-touch-icon.png",
-  "./fonts/roboto-latin-300-normal.woff2", "./fonts/roboto-latin-400-normal.woff2",
-  "./fonts/roboto-latin-500-normal.woff2", "./fonts/roboto-latin-700-normal.woff2",
+  "./xlsx.full.min.js",
+  "./intralox-red.png", "./intralox-white.png",
+  "./icon-192.png", "./icon-512.png",
+  "./icon-maskable-512.png", "./apple-touch-icon.png",
+  "./roboto-latin-300-normal.woff2", "./roboto-latin-400-normal.woff2",
+  "./roboto-latin-500-normal.woff2", "./roboto-latin-700-normal.woff2",
 ];
 
 self.addEventListener("install", (e) => {
@@ -52,7 +52,7 @@ self.addEventListener("activate", (e) => {
 
 const isAsset = (url) =>
   /\.(woff2|png|jpg|jpeg|svg|ico)$/i.test(url.pathname) ||
-  url.pathname.includes("/lib/");
+  url.pathname.endsWith("xlsx.full.min.js");
 
 self.addEventListener("fetch", (e) => {
   const req = e.request;

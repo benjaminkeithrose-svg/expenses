@@ -417,6 +417,12 @@ $("stmtInput").onchange = async (e) => {
   const f = e.target.files[0];
   e.target.value = "";
   if (!f) return;
+  // A missing xlsx.full.min.js otherwise fails here with a bare
+  // "XLSX is not defined", which says nothing about the real cause.
+  if (typeof XLSX === "undefined") {
+    toast("xlsx.full.min.js didn't load — check it uploaded", true);
+    return;
+  }
   try {
     const parsed = parseStatement(await f.arrayBuffer());
     // Re-importing must not lose work: receipts already attached are carried

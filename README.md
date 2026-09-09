@@ -6,17 +6,26 @@ export one self-contained HTML claim.
 It installs to your home screen and runs offline. Statements, photos and
 amounts stay on the device — the app has no server and no account.
 
+## Uploading to GitHub
+
+**Every file sits in the root. There are no folders, on purpose** — GitHub's
+web uploader silently drops folders, which is what broke the first attempt.
+
+1. In the repo, **Add file → Upload files**.
+2. Open this folder, select **all the files** (Ctrl+A / Cmd+A) and drag them
+   in. Don't drag the folder itself.
+3. Check the file count matches before committing: **21 files**.
+4. **Settings → Pages**, source `main` / root. The repo must be **public**
+   unless you're on a paid plan.
+
+To confirm the upload worked, open the Pages URL and use
+**⋯ → Options → Check install readiness**. Every line should tick.
+
 ## Install on the phone
 
-1. Push this folder to a GitHub repo, then turn on **Settings → Pages**,
-   source `main` / root. GitHub serves the files; it never sees your data.
-   The repo must be **public** unless you're on a paid plan — Pages is
-   disabled for private repos on the free tier.
-2. Wait for the Pages deploy to finish, then open the **https:// Pages URL**
-   in Chrome on the Samsung. It has to be that URL, not a `file://` open and
-   not a `raw.githubusercontent.com` link, or none of the install machinery
-   works.
-3. Open **⋯ → Options** in the app and tap **Install app**.
+1. Open the **https:// Pages URL** in Chrome on the Samsung. It has to be
+   that URL — not a `file://` open, not a `raw.githubusercontent.com` link.
+2. Open **⋯ → Options** and tap **Install app**.
 
 That button appears only once Chrome has confirmed the app is installable,
 so if it's there, the install will be a real one: its own icon, no browser
@@ -135,7 +144,14 @@ Global Marketing if it's going anywhere outside your own claims.
 
 ### Why it wasn't installing
 
-Two faults, both fixed:
+Three faults, all fixed:
+
+- **The `icons/` folder never reached the repo.** GitHub's web uploader
+  dropped every subfolder, so the manifest pointed at icons that returned
+  404. Icons are a hard installability requirement, so Chrome fell back to
+  "Create shortcut" with a generic icon. `lib/xlsx.full.min.js` was missing
+  too, which would have broken statement loading the moment it was tried.
+  The app is now flat — no folders to lose.
 
 - The manifest carried an `id` of `/intralox-expenses/`. Chrome resolves
   `id` against the **origin**, not the manifest's folder, so on GitHub Pages
@@ -149,6 +165,10 @@ Two faults, both fixed:
 
 `start_url` is now `./` rather than `./index.html`, so it matches scope
 exactly.
+
+If a file ever does go missing again, **Check install readiness** names it
+rather than leaving you to guess, and loading a statement without
+`xlsx.full.min.js` now says so plainly instead of failing silently.
 
 ### Updating an installed app
 
@@ -171,18 +191,25 @@ Intralox red tile. Replace both with the CRM app icon artwork, dropping the
 
 ## Files
 
-    index.html    the app shell
-    app.js        state, matching, events
-    amex.js       statement parser
-    images.js     EXIF date, rotation, resizing
-    store.js      IndexedDB
-    export.js     builds the output HTML
-    sw.js         offline cache — bump CACHE when you change a file
-    lib/          SheetJS, vendored so the app works offline
-    fonts/        Roboto (300/400/500/700), vendored
-    brand/        approved Intralox logo, red (header, export) and white (icon)
-    icons/        app icon — placeholder, see above
-                  (192, 512, maskable 512 with launcher safe zone, apple 180)
+All 21 in the root, no subfolders:
+
+    index.html              the app shell
+    app.js                  state, matching, events
+    amex.js                 statement parser
+    images.js               EXIF date, rotation, resizing
+    store.js                IndexedDB
+    export.js               builds the output HTML
+    style.css               Intralox styling
+    sw.js                   offline cache — bump VERSION when you change a file
+    manifest.json           install metadata
+    xlsx.full.min.js        SheetJS, vendored so the app works offline
+    roboto-*.woff2          Roboto 300/400/500/700
+    intralox-red.png        approved logo, used in the export
+    intralox-white.png      approved logo, used in the app icon
+    icon-192/512.png        app icon — placeholder, see above
+    icon-maskable-512.png   launcher safe zone
+    apple-touch-icon.png
+    README.md
 
 ## Storage
 
