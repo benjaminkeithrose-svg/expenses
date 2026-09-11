@@ -28,6 +28,8 @@
   <div class="tallies" id="tallies"></div>
 </header>
 
+<div class="periods" id="periods"></div>
+
 <div id="banner" class="banner" hidden></div>
 
 <nav class="tabs" role="tablist">
@@ -40,9 +42,10 @@
   <section id="view-charges" class="view">
     <div id="lines" class="rows"></div>
     <div id="chargesEmpty" class="empty">
-      <p>No statement loaded.</p>
-      <button class="btn" id="loadStmt2">Load Amex file</button>
-      <p class="soft small">Pick the .xlsx or .csv from OneDrive in your file picker.</p>
+      <p>No statements loaded.</p>
+      <button class="btn" id="loadStmt2">Load Amex files</button>
+      <p class="soft small">Pick one or several .xlsx or .csv exports from OneDrive.
+         Each becomes its own month.</p>
     </div>
   </section>
 
@@ -68,9 +71,7 @@
   </section>
 </main>
 
-<div class="footbar">
-  <button class="btn wide" id="exportBtn" disabled>Export HTML</button>
-</div>
+<div class="footbar" id="footbar"></div>
 
 <!-- date prompt shown for each new photo -->
 <div id="dateSheet" class="sheet" hidden>
@@ -81,6 +82,7 @@
       <p class="soft small" id="dateWhy"></p>
       <div class="chips" id="dateChips"></div>
       <input type="date" id="dateInput">
+      <p class="soft small home" id="dateHome"></p>
       <div class="btns">
         <button class="btn ghost" id="dateSkip">Skip</button>
         <button class="btn" id="dateOk">Save date</button>
@@ -102,8 +104,20 @@
     <div id="assignList" class="assignlist"></div>
     <div class="btns spread">
       <button class="btn ghost" id="assignCash">Make it a cash expense</button>
+      <button class="btn ghost" id="assignMove" hidden>Different month</button>
       <button class="btn ghost" id="assignWiden">Show all charges</button>
     </div>
+  </div>
+</div>
+
+<!-- period picker: switch months, or re-home a receipt that straddles two -->
+<div id="pickSheet" class="sheet" hidden>
+  <div class="card tall">
+    <div class="head">
+      <h2 id="pickTitle">Statement period</h2>
+      <button class="icon" id="pickClose" aria-label="Close">×</button>
+    </div>
+    <div id="pickList" class="assignlist"></div>
   </div>
 </div>
 
@@ -112,21 +126,23 @@
     <div class="body">
       <h2>Options</h2>
       <button class="btn wide" id="installBtn" hidden>Install app</button>
-      <button class="btn ghost wide" id="loadStmt">Load Amex file</button>
+      <button class="btn ghost wide" id="loadStmt">Load Amex files</button>
       <button class="btn ghost wide" id="storageBtn">Storage used</button>
+      <button class="btn ghost wide" id="releaseBtn">Free photos from completed months</button>
       <button class="btn ghost wide" id="diagBtn">Check install readiness</button>
-      <button class="btn ghost wide danger" id="resetBtn">Start a new month</button>
+      <button class="btn ghost wide danger" id="delPeriodBtn">Delete this period</button>
+      <button class="btn ghost wide danger" id="resetBtn">Clear everything</button>
       <p class="soft small" id="storageInfo"></p>
       <pre class="diag" id="diagOut" hidden></pre>
       <button class="btn ghost wide" id="menuClose">Close</button>
-      <p class="build">Build v6</p>
+      <p class="build">Build v7</p>
     </div>
   </div>
 </div>
 
 <div id="lightbox" class="lightbox" hidden><img id="lightboxImg" alt=""></div>
 <div id="toast" class="toast" hidden></div>
-<input type="file" id="stmtInput" accept=".xlsx,.xls,.csv" hidden>
+<input type="file" id="stmtInput" accept=".xlsx,.xls,.csv" multiple hidden>
 
 <script type="module" src="app.js"></script>
 </body>

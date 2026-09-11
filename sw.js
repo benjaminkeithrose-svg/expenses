@@ -9,7 +9,7 @@
 //
 // Bump VERSION whenever you change a file.
 
-const VERSION = "v6";
+const VERSION = "v7";
 const CODE = `receipts-code-${VERSION}`;
 const ASSETS = `receipts-assets-${VERSION}`;
 

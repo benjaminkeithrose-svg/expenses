@@ -38,11 +38,26 @@ async function logoDataURL(file) {
   }
 }
 
-export async function buildExport(state) {
-  const stmt = state.statement || {};
+/**
+ * One period, one document. Periods are never combined — each is a separate
+ * claim, reimbursed separately.
+ *
+ * @param {object} period    a single statement period with its own lines and cash
+ * @param {object} receipts  the global receipt map; only this period's are used
+ */
+export async function buildExport(period, receipts) {
+  const stmt = period;
+  const state = {
+    lines: period.lines,
+    cash: period.cash,
+    // Unmatched receipts are only ever this period's. Another month's loose
+    // receipts must not wash up in this claim.
+    receipts: Object.fromEntries(
+      Object.entries(receipts || {}).filter(([, r]) => r.periodId === period.id)),
+  };
   // White logo on the dark masthead, red for print where it inverts to white
   // paper (Guidelines p.28 — use only the white logo on dark).
-  const logo = await logoDataURL("brand/intralox-red.png");
+  const logo = await logoDataURL("intralox-red.png");
 
   // Walk everything in the order it will appear, numbering as we go. The
   // number is what ties each index row to its receipt further down.
@@ -117,7 +132,7 @@ footer{margin-top:32px;color:var(--soft);font-size:12.5px}
 
   a(`<div class="masthead">${logo ? `<img src="${logo}" alt="Intralox">` : ""}
 <h1>Expenses \u2014 ${shortDate(stmt.periodStart)} to ${shortDate(stmt.periodEnd)} ${esc((stmt.periodEnd || "").slice(0, 4))}</h1>
-<p>${esc(stmt.card || "")} \u00b7 prepared ${shortDate(new Date().toISOString().slice(0, 10))} ${new Date().getFullYear()}</p></div><div class="pad">`);
+<p>${esc(stmt.card || "")} \u00b7 prepared ${shortDate(new Date().toISOString().slice(0, 10))} ${new Date().getFullYear()}${stmt.done ? " \u00b7 completed" : ""}</p></div><div class="pad">`);
 
   a(`<div class="totals">
 <div><span>Card charges</span><b>${money(amexTotal)}</b></div>
