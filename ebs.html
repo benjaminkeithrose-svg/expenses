@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#E1EAF0">
+<title>EBS Keying Sheet — Intralox Expenses</title>
+<style>
+:root{
+  /* text */
+  --ink:#222222;
+  --ink-2:#4D4D4F;
+  --ink-3:#77787A;
+
+  /* surfaces */
+  --ground:#E1EAF0;
+  --surface:#FFFFFF;
+  --sunk:#F2F7FA;
+  --edge:#A6BDCB;
+  --line:#CCCCCC;
+  --line-2:#E3E3E3;
+
+  /* accent */
+  --cyan:#479EBC;  --cyan-dk:#00708D;
+  --cyan-md:#ACD3E1; --cyan-lt:#E3F0F5;
+
+  /* hot colour, sparingly */
+  --red:#ED1C24; --red-dark:#9D0A0E; --red-soft:#FDECED;
+
+  /* status */
+  --ok:#237F35; --ok-lt:#EEF5EF; --ok-md:#A8CDB0;
+  --warn:#B2232F; --warn-md:#E3B6BA;
+
+  /* shape */
+  --r:12px; --r-sm:8px; --r-pill:999px;
+
+  /* lift — cyan-tinted, never black */
+  --lift:0 1px 2px rgba(0,40,60,.06), 0 2px 6px rgba(0,40,60,.07);
+  --lift-2:0 2px 4px rgba(0,40,60,.09), 0 6px 16px rgba(0,40,60,.09);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:Roboto,Arial,'Helvetica Neue',Helvetica,sans-serif;
+  font-size:15px; line-height:1.45;
+}
+
+/* ---------------------------------------------------------------- header */
+
+header{
+  background:var(--surface); border-bottom:1px solid var(--edge);
+  padding:12px 16px; position:sticky; top:0; z-index:20;
+}
+.head{display:flex; align-items:center; gap:10px}
+.head h1{font-size:17px; margin:0; flex:1; min-width:0}
+.head .meta{
+  display:block; font-size:12px; font-weight:400; color:var(--ink-3);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.actions{display:flex; gap:8px; margin-top:10px; align-items:center}
+
+/* ---------------------------------------------------------------- buttons */
+
+.btn{
+  font:inherit; font-size:15px; font-weight:700; cursor:pointer;
+  border-radius:var(--r-sm); padding:12px 16px; min-height:44px;
+  background:var(--red); color:var(--surface); border:1px solid var(--red);
+  flex:1;
+}
+.btn:active{background:var(--red-dark); border-color:var(--red-dark)}
+.btn.secondary{
+  background:var(--surface); color:var(--ink); border:1px solid var(--edge);
+  font-weight:600;
+}
+.btn:disabled{opacity:.45; cursor:default}
+
+.icon-btn{
+  width:44px; height:44px; flex:none; display:flex; align-items:center;
+  justify-content:center; background:var(--surface); color:var(--ink-2);
+  border:1px solid var(--edge); border-radius:var(--r-sm); cursor:pointer;
+  padding:0;
+}
+.ic{width:18px; height:18px; flex:none}
+
+/* ---------------------------------------------------------------- overflow */
+
+.menu-wrap{position:relative; flex:none}
+.menu{
+  position:absolute; right:0; top:50px; z-index:30; min-width:212px;
+  background:var(--surface); border:1px solid var(--edge);
+  border-radius:var(--r); box-shadow:var(--lift-2); padding:6px;
+}
+.menu[hidden]{display:none}
+.menu button{
+  display:flex; align-items:center; gap:10px; width:100%; min-height:44px;
+  padding:0 10px; background:none; border:0; border-radius:var(--r-sm);
+  font:inherit; font-size:15px; color:var(--ink); cursor:pointer; text-align:left;
+}
+.menu button:hover{background:var(--sunk)}
+.menu button .ic{color:var(--cyan-dk)}
+.menu button.danger{color:var(--warn)}
+.menu button.danger .ic{color:var(--warn)}
+.menu button:disabled{opacity:.45; cursor:default}
+.menu hr{border:0; border-top:1px solid var(--line-2); margin:6px 4px}
+
+/* ---------------------------------------------------------------- layout */
+
+main{padding:4px 16px 40px; max-width:1100px; margin:0 auto}
+
+h2{
+  font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+  font-weight:700; color:var(--ink-3); margin:28px 0 10px;
+  display:flex; justify-content:space-between; gap:12px; align-items:baseline;
+}
+h2 .total{letter-spacing:0; text-transform:none; font-weight:400; font-size:12px}
+
+.card{
+  background:var(--surface); border:1px solid var(--edge);
+  border-radius:var(--r); box-shadow:var(--lift); overflow:hidden;
+}
+
+.notice{
+  background:var(--surface); border:1px solid var(--edge);
+  border-left:3px solid var(--cyan-dk);
+  border-radius:var(--r); box-shadow:var(--lift);
+  padding:14px; margin:20px 0 4px; font-size:14px;
+}
+.notice p{margin:0; color:var(--ink-2)}
+.notice ul{margin:8px 0 0; padding-left:20px; color:var(--ink-2)}
+.notice b{color:var(--ink)}
+
+/* ---------------------------------------------------------------- rows */
+
+.row{
+  display:grid; gap:8px; align-items:center; padding:10px 12px;
+  grid-template-columns:28px 122px 96px minmax(0,1.15fr) minmax(0,1fr) auto;
+  border-bottom:1px solid var(--line-2);
+}
+.row:last-child{border-bottom:0}
+/* The whole row tones once it is keyed — scanning a list for colour beats
+   reading a column of markers. Everything still to do stays white. */
+.row.done{background:var(--ok-lt)}
+.row .n{color:var(--ink-3); font-size:13px; text-align:right}
+.row .desc{
+  grid-column:2 / -1; color:var(--ink-3); font-size:12px;
+  margin-top:-2px; padding-bottom:2px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+.cell{
+  font:inherit; width:100%; min-height:44px; text-align:left;
+  background:var(--sunk); border:1px solid var(--line-2);
+  border-radius:var(--r-sm); padding:11px 12px; color:var(--ink);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+button.cell{cursor:pointer; font-variant-numeric:tabular-nums}
+select.cell{cursor:pointer; font-size:16px}
+input.cell{font-size:16px}
+.cell:focus{
+  background:var(--surface); border-color:var(--cyan-dk);
+  box-shadow:0 0 0 3px var(--cyan-lt); outline:none;
+}
+button.cell:hover{background:var(--surface); border-color:var(--cyan-md)}
+
+/* Copied and next-to-copy are two states on one row, so they are two
+   shapes: a fill, and a ring. */
+.cell.copied{background:var(--ok-lt); border-color:var(--ok-md); color:var(--ink-2)}
+.cell.next{border-color:var(--cyan-dk); box-shadow:0 0 0 3px var(--cyan-lt)}
+/* Still a guess, or nothing to guess from. */
+.cell.guess{background:var(--cyan-lt); border-color:var(--cyan-md)}
+.cell.unresolved{background:var(--red-soft); border-color:var(--warn-md)}
+
+.mini{display:flex; gap:6px; align-items:center; justify-content:flex-end}
+.chip{
+  font:inherit; font-size:12px; font-weight:600; min-height:32px; padding:0 12px;
+  border-radius:var(--r-pill); border:1px solid var(--edge);
+  background:var(--surface); color:var(--ink-2); cursor:pointer; white-space:nowrap;
+}
+.chip[aria-pressed="true"]{
+  background:var(--cyan-lt); border-color:var(--cyan-dk); color:var(--cyan-dk);
+}
+.tick{
+  width:44px; height:44px; flex:none; display:flex; align-items:center;
+  justify-content:center; border:1px solid var(--edge); background:var(--surface);
+  border-radius:var(--r-sm); cursor:pointer; color:var(--ink-3); padding:0;
+}
+.tick[aria-pressed="true"]{background:var(--ok); border-color:var(--ok); color:var(--surface)}
+
+/* ---------------------------------------------------------------- misc */
+
+.empty{
+  text-align:center; padding:44px 20px; color:var(--ink-3);
+  background:var(--surface); border:1px solid var(--edge);
+  border-radius:var(--r); box-shadow:var(--lift); margin-top:20px;
+}
+.empty p{margin:0 0 6px}
+.empty p:last-child{margin:0; font-size:13px}
+
+.toast{
+  position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
+  background:var(--ink); color:var(--surface); padding:11px 18px;
+  border-radius:var(--r-sm); font-size:14px; z-index:60; box-shadow:var(--lift-2);
+  max-width:90%;
+}
+.toast.bad{background:var(--warn)}
+
+dialog{
+  border:1px solid var(--edge); border-radius:var(--r); padding:16px;
+  max-width:400px; width:92%; box-shadow:var(--lift-2); color:var(--ink);
+  font-family:inherit;
+}
+dialog::backdrop{background:rgba(0,40,60,.32)}
+dialog h2{margin:0}
+dialog label{
+  display:block; font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+  font-weight:700; color:var(--ink-3); margin:14px 0 6px;
+}
+dialog input{
+  width:100%; background:var(--sunk); border:1px solid var(--line-2);
+  border-radius:var(--r-sm); padding:11px 12px; font:inherit; font-size:16px;
+}
+dialog input:focus{
+  background:var(--surface); border-color:var(--cyan-dk);
+  box-shadow:0 0 0 3px var(--cyan-lt); outline:none;
+}
+.dlg-actions{display:flex; gap:8px; margin-top:18px}
+
+@media (max-width:760px){
+  .row{grid-template-columns:24px 1fr 1fr; row-gap:8px}
+  .row .n{grid-row:span 3}
+  .row .mini{grid-column:2 / -1; justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head">
+    <h1>EBS Keying Sheet
+      <span class="meta" id="sub">Load an Amex statement to begin.</span>
+    </h1>
+    <div class="menu-wrap">
+      <button class="icon-btn" id="menuBtn" aria-label="More actions" title="More actions"
+              aria-haspopup="true" aria-expanded="false"></button>
+      <div class="menu" id="menu" hidden role="menu">
+        <button id="mAddCash" role="menuitem"><i></i>Add cash line</button>
+        <button id="mCsv" role="menuitem" disabled><i></i>Export CSV</button>
+        <hr>
+        <button id="mReset" class="danger" role="menuitem" disabled><i></i>Clear statement</button>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn" id="load">Load Amex file</button>
+  </div>
+  <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
+</header>
+
+<main>
+  <div id="flags"></div>
+  <div id="blocks"></div>
+  <div class="empty" id="empty">
+    <p>No statement loaded.</p>
+    <p>Pick the same .xlsx or .csv you load into the expenses app.</p>
+  </div>
+</main>
+
+<!-- The real controls, kept in the DOM so the overflow menu can click them.
+     Moving the handlers into the menu would mean two places to keep in step. -->
+<div hidden aria-hidden="true">
+  <button id="addCash"></button>
+  <button id="csv"></button>
+  <button id="reset"></button>
+</div>
+
+<dialog id="cashDlg" aria-label="Add a cash line">
+  <h2>Add a cash line</h2>
+  <label for="cDate">Date</label><input type="date" id="cDate">
+  <label for="cAmt">Amount</label><input type="number" step="0.01" id="cAmt" placeholder="0.00">
+  <label for="cDesc">What it was</label><input type="text" id="cDesc" placeholder="Parking, Dubbo">
+  <label for="cCity">Town — optional, sets the zone</label><input type="text" id="cCity">
+  <div class="dlg-actions">
+    <button class="btn secondary" id="cCancel">Cancel</button>
+    <button class="btn" id="cAdd">Add</button>
+  </div>
+</dialog>
+
+<script src="xlsx.full.min.js"></script>
+<script type="module">
+import {
+  parseStatement, StatementError, buildRows, guessType, zoneFromRow,
+  fillZoneGaps, merchantKey, ebsDate, ebsAmount, justification,
+  TYPES, ZONES, ZONE_ORDER, UNCAT, MEAL_TYPES, MEALS_3P,
+} from "./ebs.js";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
+  (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+
+/* ------------------------------------------------------------------ icons */
+
+// Feather, inline. One map and one helper, so the icon language has a single
+// place to change. Accent or neutral only — the hot colour is for destructive.
+const ICONS = {
+  plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  more: '<circle cx="12" cy="5" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.4" fill="currentColor" stroke="none"/>',
+  check: '<path d="M20 6L9 17l-5-5"/>',
+};
+
+const icon = (name) =>
+  `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     aria-hidden="true">${ICONS[name]}</svg>`;
+
+$("menuBtn").innerHTML = icon("more");
+$("mAddCash").querySelector("i").outerHTML = icon("plus");
+$("mCsv").querySelector("i").outerHTML = icon("download");
+$("mReset").querySelector("i").outerHTML = icon("trash");
+
+/* ----------------------------------------------------------------- state */
+
+const PAGE = 10;                       // EBS grid lines per page
+let rows = [];
+let cursor = 0;                        // next field to copy, flat index
+const copied = new Set();
+
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let overrides = store.get("ebs.overrides", { types: {}, zones: {} });
+const save = () => store.set("ebs.session", { rows, sub: $("sub").textContent });
+
+function toast(msg, bad) {
+  const t = document.createElement("div");
+  t.className = "toast" + (bad ? " bad" : "");
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
+
+/* ------------------------------------------------------- overflow menu */
+
+const menu = $("menu"), menuBtn = $("menuBtn");
+const closeMenu = () => { menu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); };
+menuBtn.onclick = (e) => {
+  e.stopPropagation();
+  menu.hidden = !menu.hidden;
+  menuBtn.setAttribute("aria-expanded", String(!menu.hidden));
+};
+document.addEventListener("click", closeMenu);
+menu.onclick = (e) => e.stopPropagation();
+
+// The menu drives the real controls rather than owning any logic of its own.
+$("mAddCash").onclick = () => { closeMenu(); $("addCash").click(); };
+$("mCsv").onclick = () => { closeMenu(); $("csv").click(); };
+$("mReset").onclick = () => { closeMenu(); $("reset").click(); };
+
+/* ------------------------------------------------------------- loading */
+
+$("load").onclick = () => $("file").click();
+$("file").onchange = async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const st = parseStatement(await f.arrayBuffer());
+    rows = buildRows(st.charges, overrides);
+    cursor = 0; copied.clear();
+    $("sub").textContent =
+      `${st.card} · ${st.periodStart} to ${st.periodEnd} · $${st.total.toFixed(2)}`;
+    if (st.check && !st.check.ok)
+      toast(`Total doesn't match the summary sheet ($${st.check.stated.toFixed(2)})`, true);
+    save(); render();
+  } catch (err) {
+    toast(err instanceof StatementError ? err.message : "Couldn't read that file.", true);
+  }
+  e.target.value = "";
+};
+
+/* Cash lines key into the same grid, so they live in the same list. */
+const dlg = $("cashDlg");
+$("addCash").onclick = () => { $("cDate").valueAsDate = new Date(); dlg.showModal(); };
+$("cCancel").onclick = () => dlg.close();
+$("cAdd").onclick = () => {
+  const date = $("cDate").value, amount = parseFloat($("cAmt").value);
+  const description = $("cDesc").value.trim(), city = $("cCity").value.trim();
+  if (!date || !isFinite(amount) || !description) { toast("Date, amount and description.", true); return; }
+  const key = merchantKey(description, city);
+  const hit = zoneFromRow(description, city);
+  rows.push({
+    id: "cash" + Date.now(), date, amount, description, city, key,
+    type: overrides.types[key] || guessType(description), typeGuessed: true,
+    zone: overrides.zones[key] || (hit ? hit.zone : null),
+    zoneVia: hit ? hit.via : null, keyed: false, manual: true,
+  });
+  rows.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  fillZoneGaps(rows);
+  $("cAmt").value = $("cDesc").value = $("cCity").value = "";
+  dlg.close(); save(); render();
+};
+
+$("reset").onclick = () => {
+  if (!confirm("Clear the loaded statement? Merchant corrections are kept.")) return;
+  rows = []; cursor = 0; copied.clear();
+  $("sub").textContent = "Load an Amex statement to begin.";
+  save(); render();
+};
+
+/* ------------------------------------------------------------ rendering */
+
+function render() {
+  const any = rows.length > 0;
+  $("empty").hidden = any;
+  $("csv").disabled = $("reset").disabled = !any;
+  $("mCsv").disabled = $("mReset").disabled = !any;
+
+  renderFlags();
+
+  const out = [];
+  for (let p = 0; p * PAGE < rows.length; p++) {
+    const slice = rows.slice(p * PAGE, p * PAGE + PAGE);
+    const sum = slice.reduce((s, r) => s + r.amount, 0);
+    out.push(`<h2>Page ${p + 1} · lines ${p * PAGE + 1}–${p * PAGE + slice.length}
+      <span class="total">$${sum.toFixed(2)}</span></h2>
+      <section class="card">${slice.map((r, i) => rowHTML(r, p * PAGE + i)).join("")}</section>`);
+  }
+  $("blocks").innerHTML = out.join("");
+  wire();
+}
+
+function rowHTML(r, i) {
+  const unresolved = !r.zone;
+  const meal = MEAL_TYPES.has(r.type);
+  const isThird = r.type === MEALS_3P;
+  const f = (n) => i * 4 + n;                       // flat field index
+  const cls = (n, extra = "") =>
+    `cell ${extra} ${copied.has(f(n)) ? "copied" : ""} ${cursor === f(n) ? "next" : ""}`;
+
+  const typeState = r.type === UNCAT ? "unresolved" : r.typeGuessed ? "guess" : "";
+
+  return `<div class="row ${r.keyed ? "done" : ""}">
+    <div class="n">${i + 1}</div>
+    <button class="${cls(0)}" data-copy="${f(0)}" data-val="${esc(ebsDate(r.date))}"
+      title="Copy date">${esc(ebsDate(r.date))}</button>
+    <button class="${cls(1)}" data-copy="${f(1)}" data-val="${ebsAmount(r.amount)}"
+      title="Copy amount">${ebsAmount(r.amount)}</button>
+    <select class="${cls(2, typeState)}" data-type="${i}" aria-label="Expense type">
+      ${TYPES.map((t) => `<option ${t === r.type ? "selected" : ""}>${esc(t)}</option>`).join("")}
+    </select>
+    <input class="${cls(3, unresolved ? "unresolved" : "")}" data-just="${i}"
+      aria-label="Justification" value="${esc(justification(r))}"
+      placeholder="${unresolved ? "Zone unknown — set it" : ""}">
+    <div class="mini">
+      ${meal ? `<button class="chip" data-third="${i}" aria-pressed="${isThird}"
+        title="Customer present">3rd party</button>` : ""}
+      <button class="tick" data-tick="${i}" aria-pressed="${r.keyed}"
+        aria-label="Mark line ${i + 1} keyed" title="Keyed">${icon("check")}</button>
+    </div>
+    <div class="desc">${esc(r.description)}${r.manual ? " · cash" : ""}</div>
+  </div>`;
+}
+
+/* Only what has to be acted on before keying starts. The per-page keyed count
+   and the inferred-zone note were repeating what the row already shows. */
+function renderFlags() {
+  if (!rows.length) { $("flags").innerHTML = ""; return; }
+  const noZone = rows.filter((r) => !r.zone).length;
+  const uncat = rows.filter((r) => r.type === UNCAT).length;
+  const done = rows.filter((r) => r.keyed).length;
+  const bits = [];
+  if (noZone) bits.push(`<li><b>${noZone}</b> with no travel zone — set the justification by hand.</li>`);
+  if (uncat) bits.push(`<li><b>${uncat}</b> fell through to Uncategorized — pick a type and it sticks for that merchant.</li>`);
+
+  $("flags").innerHTML = `<div class="notice">
+    <p><b>${done} of ${rows.length}</b> lines keyed.</p>
+    ${bits.length ? `<ul>${bits.join("")}</ul>` : ""}
+  </div>`;
+}
+
+/* ---------------------------------------------------------- interaction */
+
+function wire() {
+  document.querySelectorAll("[data-copy]").forEach((el) => {
+    el.onclick = () => copy(el.dataset.val, +el.dataset.copy);
+  });
+  document.querySelectorAll("[data-type]").forEach((el) => {
+    el.onchange = () => {
+      const r = rows[+el.dataset.type];
+      r.type = el.value; r.typeGuessed = false;
+      overrides.types[r.key] = el.value;          // remembered for next month
+      store.set("ebs.overrides", overrides);
+      save(); render();
+    };
+    // Selecting in EBS is a paste, so make the text copyable too.
+    el.oncontextmenu = (e) => { e.preventDefault(); copy(el.value, +el.dataset.type * 4 + 2); };
+  });
+  document.querySelectorAll("[data-just]").forEach((el) => {
+    el.onchange = () => {
+      const r = rows[+el.dataset.just];
+      r.justification = el.value;
+      const z = ZONE_ORDER.find((k) => ZONES[k] === el.value.trim());
+      if (z) { r.zone = z; overrides.zones[r.key] = z; store.set("ebs.overrides", overrides); }
+      save(); render();
+    };
+    el.onfocus = () => el.select();
+    el.ondblclick = () => copy(el.value, +el.dataset.just * 4 + 3);
+  });
+  document.querySelectorAll("[data-tick]").forEach((el) => {
+    el.onclick = () => { const r = rows[+el.dataset.tick]; r.keyed = !r.keyed; save(); render(); };
+  });
+  document.querySelectorAll("[data-third]").forEach((el) => {
+    el.onclick = () => {
+      const r = rows[+el.dataset.third];
+      r.type = r.type === MEALS_3P ? "Meals(Off-Site - travel,recruiting,etc.)" : MEALS_3P;
+      r.typeGuessed = false;
+      overrides.types[r.key] = r.type;
+      store.set("ebs.overrides", overrides);
+      save(); render();
+    };
+  });
+}
+
+async function copy(text, idx) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch {}
+    ta.remove();
+  }
+  copied.add(idx);
+  cursor = idx + 1;                              // advance so the next cell lights up
+  render();
+}
+
+/* ------------------------------------------------------------- exports */
+
+$("csv").onclick = () => {
+  const q = (s) => `"${String(s).replace(/"/g, '""')}"`;
+  const lines = [["Page", "Line", "Date", "Receipt Amount", "Expense Type", "Justification", "Description"].join(",")];
+  rows.forEach((r, i) => lines.push([
+    Math.floor(i / PAGE) + 1, (i % PAGE) + 1, q(ebsDate(r.date)), ebsAmount(r.amount),
+    q(r.type), q(justification(r)), q(r.description),
+  ].join(",")));
+  const url = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = "ebs-keying-sheet.csv"; a.click();
+  URL.revokeObjectURL(url);
+};
+
+/* Session survives a refresh mid-key, which matters on a slow VPN. */
+(function restore() {
+  const s = store.get("ebs.session", null);
+  if (s && s.rows && s.rows.length) { rows = s.rows; $("sub").textContent = s.sub; }
+  render();
+})();
+</script>
+</body>
+</html>
