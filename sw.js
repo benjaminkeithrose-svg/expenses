@@ -16,6 +16,7 @@ const ASSETS = `receipts-assets-${VERSION}`;
 const CODE_FILES = [
   "./", "./index.html", "./style.css", "./app.js", "./amex.js",
   "./images.js", "./store.js", "./export.js", "./manifest.json",
+  "./ebs.html", "./ebs.js", "./update.js",
 ];
 
 const ASSET_FILES = [
@@ -48,6 +49,17 @@ self.addEventListener("activate", (e) => {
       if (!keep.includes(k)) await caches.delete(k);
     await self.clients.claim();
   })());
+});
+
+// The Update button clears caches from the page, but a worker that is still
+// controlling other tabs would keep serving its own. Let it stand down.
+self.addEventListener("message", (e) => {
+  if (e.data === "purge") {
+    e.waitUntil((async () => {
+      for (const k of await caches.keys()) await caches.delete(k);
+      await self.registration.unregister();
+    })());
+  }
 });
 
 const isAsset = (url) =>

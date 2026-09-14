@@ -104,6 +104,7 @@ header{
 .menu button.danger .ic{color:var(--warn)}
 .menu button:disabled{opacity:.45; cursor:default}
 .menu hr{border:0; border-top:1px solid var(--line-2); margin:6px 4px}
+.menu .build{padding:2px 10px 6px; font-size:12px; color:var(--ink-3)}
 
 /* ---------------------------------------------------------------- layout */
 
@@ -248,6 +249,9 @@ dialog input:focus{
         <button id="mAddCash" role="menuitem"><i></i>Add cash line</button>
         <button id="mCsv" role="menuitem" disabled><i></i>Export CSV</button>
         <hr>
+        <button id="mUpdate" role="menuitem"><i></i>Update app</button>
+        <div class="build" id="build"></div>
+        <hr>
         <button id="mReset" class="danger" role="menuitem" disabled><i></i>Clear statement</button>
       </div>
     </div>
@@ -294,6 +298,7 @@ import {
   fillZoneGaps, merchantKey, ebsDate, ebsAmount, justification,
   TYPES, ZONES, ZONE_ORDER, UNCAT, MEAL_TYPES, MEALS_3P,
 } from "./ebs.js";
+import { BUILD, forceUpdate, cleanURL, checkForUpdate } from "./update.js";
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
@@ -309,6 +314,7 @@ const ICONS = {
   trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
   more: '<circle cx="12" cy="5" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.4" fill="currentColor" stroke="none"/>',
   check: '<path d="M20 6L9 17l-5-5"/>',
+  refresh: '<path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
 };
 
 const icon = (name) =>
@@ -320,6 +326,8 @@ $("menuBtn").innerHTML = icon("more");
 $("mAddCash").querySelector("i").outerHTML = icon("plus");
 $("mCsv").querySelector("i").outerHTML = icon("download");
 $("mReset").querySelector("i").outerHTML = icon("trash");
+$("mUpdate").querySelector("i").outerHTML = icon("refresh");
+$("build").textContent = `Build ${BUILD}`;
 
 /* ----------------------------------------------------------------- state */
 
@@ -359,6 +367,18 @@ menu.onclick = (e) => e.stopPropagation();
 $("mAddCash").onclick = () => { closeMenu(); $("addCash").click(); };
 $("mCsv").onclick = () => { closeMenu(); $("csv").click(); };
 $("mReset").onclick = () => { closeMenu(); $("reset").click(); };
+
+/* Pull the newest deployment without reinstalling. Statements and receipts
+   live in IndexedDB and are not touched — only the cached app is. */
+$("mUpdate").onclick = async () => {
+  closeMenu();
+  $("mUpdate").disabled = true;
+  await forceUpdate((msg) => toast(msg));
+};
+
+// Most updates should land with nobody pressing anything.
+checkForUpdate();
+if (cleanURL()) toast(`Updated — build ${BUILD}`);
 
 /* ------------------------------------------------------------- loading */
 
